@@ -8,6 +8,7 @@ import {
   useSigner,
   usePrepareContractWrite,
   useContractWrite,
+  useProvider,
 } from "wagmi";
 // import { SDK, Auth, TEMPLATES } from "@infura/sdk";
 import { Network, Alchemy } from "alchemy-sdk";
@@ -22,20 +23,12 @@ const Assets = () => {
   const { address } = useAccount();
   const { chains, chain } = useNetwork();
   const { data: signer } = useSigner();
+  const { provider } = useProvider();
   const [allNfts, setAllNfts] = useState([]);
-  const [borrower, setBNorrowerAdd] = useState([]);
+  // const [borrowerAdd, setBNorrowerAdd] = useState("");
   const [hide, setHide] = useState(true);
 
-  const { configWrite, error } = usePrepareContractWrite({
-    address: "0xC773802974aA098D42cd62Ecf1a6f4Eea3C92293",
-    abi: contractAbi,
-    functionName: "setUser",
-    args: [address, tokenUri,9999999],
-  });
-  const { write, data } = useContractWrite(configWrite);
-
-
-  const deligation = async ({ id }) => {
+  const deligation = async (id) => {
     const borrowerAdd = prompt("")
     const dateStr = "2022-06-22";
     const date = new Date(dateStr);
@@ -45,11 +38,11 @@ const Assets = () => {
       contractAbi,
       signer
     );
-    console.log(borrowerAdd,unixTimestamp)
+    console.log(id,borrowerAdd,unixTimestamp)
     const nftTxn = await myNftContract.setUser(
-      id,
-      [borrowerAdd],
-      [unixTimestamp]
+      id.toString(),
+      [borrowerAdd.toLocaleLowerCase()],
+      [unixTimestamp.toString()]
     );
 
     await nftTxn.wait();
@@ -73,7 +66,7 @@ const Assets = () => {
           "0xC773802974aA098D42cd62Ecf1a6f4Eea3C92293".toLocaleLowerCase() ===
           e.contract.address.toLocaleLowerCase()
       );
-      // console.log("revisedNfts", revisedNfts);
+      console.log("revisedNfts", revisedNfts);
       setAllNfts(revisedNfts);
     };
 
@@ -119,7 +112,7 @@ const Assets = () => {
                 </>
               )} */}
                 <button
-                  onClick={deligation}
+                  onClick={()=>deligation(item.tokenId)}
                   className="text-xl font-bold rounded-md bg-blue-500 px-3 py-2 text-white"
                 >
                   Deligate
