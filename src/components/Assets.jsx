@@ -87,7 +87,7 @@ const Assets = () => {
             key={index}
             className="w-full h-full rounded-lg border border-black"
           >
-            <img className="h-full w-full" src={item.media[0].gateway} alt="" />
+            <img className="h-full w-full" src={item?.media[0]?.gateway} alt="" />
 
             <div className="w-full h-1/3 grid grid-cols-1 gap-4 mt-5">
               {/* {!hide && (
